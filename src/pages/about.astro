@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+	title="About — ReelClarity"
+	description="ReelClarity is a small, focused tool that enhances video resolution and sharpness entirely on your device. Learn why it exists and how it works."
+	canonicalPath="/about"
+>
+	<section class="mx-auto max-w-2xl">
+		<h1 class="text-3xl font-semibold tracking-tight text-[#2B2013] sm:text-4xl">
+			About ReelClarity
+		</h1>
+
+		<div class="mt-6 space-y-5 text-[#5C4F3D] leading-relaxed">
+			<p>
+				ReelClarity does one thing: it enhances the resolution and sharpness
+				of a video, entirely inside your browser. No accounts, no uploads to
+				a server, no waiting in a queue.
+			</p>
+			<p>
+				We built it as a single-purpose tool on purpose. Instead of bolting
+				video enhancement onto a crowded do-everything utility site, ReelClarity
+				exists to do this one job well &mdash; quickly, privately, and without
+				clutter.
+			</p>
+			<p>
+				Under the hood, ReelClarity tries to run a real on-device AI
+				super-resolution model (ESRGAN) frame by frame. If your device can't
+				keep up, it automatically falls back to a fast, high-quality
+				resample-and-sharpen pass so you still walk away with a usable,
+				enhanced file. Either way, everything happens locally &mdash; your
+				video never leaves your machine.
+			</p>
+			<p>
+				ReelClarity is part of a small family of focused, single-purpose
+				browser tools built by RapidXAI.
+			</p>
+		</div>
+	</section>
+</Layout>

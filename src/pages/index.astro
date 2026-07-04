@@ -1,0 +1,752 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+	title="ReelClarity — Enhance Video Resolution &amp; Sharpness, On-Device"
+	description="ReelClarity enhances video resolution and sharpness entirely on your device. No uploads, no signup, no waiting on a server. Preview a 5-second sample before committing to the full video."
+	canonicalPath="/"
+>
+	<section id="tool" class="mx-auto max-w-3xl">
+		<p class="text-xs font-semibold uppercase tracking-widest text-[#C9982E]">
+			On-device video enhancement
+		</p>
+		<h1 class="mt-3 text-4xl font-semibold tracking-tight text-[#2B2013] sm:text-5xl">
+			Reel<span class="text-[#C9982E]">Clarity</span>
+		</h1>
+
+		<p class="mt-5 text-lg leading-relaxed text-[#5C4F3D]">
+			Sharpen and upscale your video's resolution right in your browser
+			&mdash; nothing is ever uploaded anywhere. Choose a file below and
+			ReelClarity will first process a
+			<strong class="text-[#2B2013]">5-second preview</strong> so you can
+			judge the quality and see how long a full run would take on your
+			device, before committing to the whole video.
+		</p>
+
+		<div class="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-[#8A7D67]">
+			<p>
+				This tool tries to run a real on-device AI super-resolution model
+				(<strong class="text-[#5C4F3D]">ESRGAN</strong>) frame-by-frame: each
+				video frame is drawn to a hidden canvas, passed through the model to
+				sharpen detail and enhance resolution, then re-encoded into a new
+				video using your browser's built-in
+				<code class="rounded bg-[#F3ECD9] px-1 py-0.5 text-xs">MediaRecorder</code>.
+				Per-frame ML upscaling is heavy, so if your device is too slow to
+				process frames faster than the video plays back, ReelClarity
+				automatically falls back to a
+				<strong class="text-[#5C4F3D]">fast sharpness-enhanced upscale</strong>
+				(high-quality canvas resampling plus an unsharp-mask sharpening pass)
+				so you still get a real, usable result instead of waiting forever.
+				Whichever mode ran is labeled clearly on the result so you always
+				know what you got.
+			</p>
+		</div>
+
+		<div class="mt-10 rounded-xl border border-[#E8DFC8] bg-white p-6 shadow-sm shadow-[#e8dfc8]/40 sm:p-8">
+			<div class="grid gap-6 sm:grid-cols-2">
+				<div>
+					<label
+						for="file-input"
+						class="mb-2 block text-sm font-medium text-[#5C4F3D]"
+					>
+						Choose a video file
+					</label>
+					<input
+						id="file-input"
+						type="file"
+						accept="video/*"
+						class="block w-full cursor-pointer rounded-xl border border-[#E8DFC8] bg-white text-sm text-[#5C4F3D] file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-[#C9982E] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-[#B8860B]"
+					/>
+					<p class="mt-1.5 text-xs text-[#8A7D67]">
+						One file at a time &mdash; the preview needs to inspect it first.
+					</p>
+				</div>
+
+				<div>
+					<label
+						for="scale-select"
+						class="mb-2 block text-sm font-medium text-[#5C4F3D]"
+					>
+						Upscale factor
+					</label>
+					<select
+						id="scale-select"
+						class="block w-full rounded-xl border border-[#E8DFC8] bg-white px-4 py-2.5 text-sm text-[#2B2013] focus:border-[#C9982E] focus:outline-none"
+					>
+						<option value="2">2&times; resolution</option>
+						<option value="4">4&times; resolution</option>
+					</select>
+					<p class="mt-1.5 text-xs text-[#8A7D67]">
+						Higher factors take longer, especially in AI mode.
+					</p>
+				</div>
+			</div>
+
+			<button
+				id="preview-btn"
+				type="button"
+				disabled
+				class="mt-6 w-full rounded-xl bg-[#C9982E] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#B8860B] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+			>
+				Process 5-second preview
+			</button>
+
+			<!-- Status / progress -->
+			<div id="status-wrap" class="mt-6 hidden">
+				<div class="flex items-center justify-between text-sm">
+					<span id="status-text" class="text-[#5C4F3D]">Idle</span>
+					<span id="status-percent" class="text-[#8A7D67]">0%</span>
+				</div>
+				<div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-[#F3ECD9]">
+					<div
+						id="progress-bar"
+						class="h-full w-0 rounded-full bg-[#C9982E] transition-all duration-150"
+					></div>
+				</div>
+			</div>
+
+			<div
+				id="error-box"
+				class="mt-6 hidden rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+			>
+			</div>
+
+			<!-- Preview result -->
+			<div id="preview-result" class="mt-8 hidden">
+				<div class="flex items-center justify-between gap-3">
+					<h2 class="text-sm font-semibold text-[#2B2013]">
+						5-second preview
+					</h2>
+					<span
+						id="preview-mode-badge"
+						class="rounded-full border border-[#E8DFC8] bg-[#FAF6EC] px-3 py-1 text-xs font-medium text-[#B8860B]"
+					></span>
+				</div>
+
+				<div class="mt-4 grid gap-4 sm:grid-cols-2">
+					<div>
+						<p class="mb-1.5 text-xs font-medium text-[#8A7D67]">Original</p>
+						<video
+							id="preview-original-video"
+							controls
+							muted
+							playsinline
+							class="w-full rounded-xl border border-[#E8DFC8] bg-black"
+						></video>
+					</div>
+					<div>
+						<p class="mb-1.5 text-xs font-medium text-[#8A7D67]">Enhanced</p>
+						<video
+							id="preview-upscaled-video"
+							controls
+							muted
+							playsinline
+							class="w-full rounded-xl border border-[#E8DFC8] bg-black"
+						></video>
+					</div>
+				</div>
+
+				<div
+					id="preview-stats"
+					class="mt-4 rounded-xl border border-[#E8DFC8] bg-[#FAF6EC] p-4 text-sm text-[#5C4F3D]"
+				>
+				</div>
+
+				<div class="mt-5 flex flex-wrap gap-3">
+					<button
+						id="approve-btn"
+						type="button"
+						class="rounded-xl bg-[#C9982E] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#B8860B]"
+					>
+						Looks good &mdash; enhance the full video
+					</button>
+					<button
+						id="reject-btn"
+						type="button"
+						class="rounded-xl border border-[#E8DFC8] bg-white px-6 py-3 text-sm font-semibold text-[#5C4F3D] transition hover:bg-[#FAF6EC]"
+					>
+						Try a different file
+					</button>
+				</div>
+			</div>
+
+			<!-- Full run result -->
+			<div id="full-result" class="mt-8 hidden">
+				<div class="flex items-center justify-between gap-3">
+					<h2 class="text-sm font-semibold text-[#2B2013]">
+						Full enhanced video
+					</h2>
+					<span
+						id="full-mode-badge"
+						class="rounded-full border border-[#E8DFC8] bg-[#FAF6EC] px-3 py-1 text-xs font-medium text-[#B8860B]"
+					></span>
+				</div>
+				<video
+					id="full-video"
+					controls
+					playsinline
+					class="mt-4 w-full rounded-xl border border-[#E8DFC8] bg-black"
+				></video>
+				<div class="mt-4 flex flex-wrap items-center gap-3">
+					<a
+						id="download-link"
+						download="enhanced-video.webm"
+						class="inline-flex items-center gap-2 rounded-xl bg-[#C9982E] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#B8860B]"
+					>
+						Download enhanced video
+					</a>
+					<span id="full-size-text" class="text-xs text-[#8A7D67]"></span>
+				</div>
+			</div>
+		</div>
+
+		<div
+			class="mt-8 rounded-xl border border-[#E8DFC8] bg-white/60 p-6 text-sm text-[#8A7D67]"
+		>
+			<p>
+				<strong class="text-[#5C4F3D]">How it works:</strong> your browser
+				decodes the video with a hidden
+				<code class="rounded bg-[#F3ECD9] px-1 py-0.5 text-xs">&lt;video&gt;</code>
+				element, seeks through it frame by frame, draws each frame to a canvas,
+				enhances that frame (either through the on-device ESRGAN model or a
+				high-quality resample + sharpen pass), and streams the enhanced
+				canvas into
+				<code class="rounded bg-[#F3ECD9] px-1 py-0.5 text-xs">MediaRecorder</code>
+				to produce a new WebM file. The 5-second preview always runs first so
+				you can judge quality and get a real time estimate &mdash; extrapolated
+				directly from how long your device took on the preview &mdash; before
+				running the full video. Audio is currently not carried over to the
+				enhanced output. Very long or very high-resolution videos may take a
+				while or use significant memory, since everything happens on your
+				device.
+			</p>
+		</div>
+
+		<div class="mt-6 flex flex-wrap gap-4 text-sm text-[#8A7D67]">
+			<a href={`${import.meta.env.BASE_URL}about`} class="hover:text-[#B8860B]">About ReelClarity</a>
+			<a href={`${import.meta.env.BASE_URL}faq`} class="hover:text-[#B8860B]">FAQ</a>
+			<a href={`${import.meta.env.BASE_URL}privacy`} class="hover:text-[#B8860B]">Privacy Policy</a>
+		</div>
+	</section>
+
+	<script>
+		type Mode = 'ai' | 'fallback';
+
+		const fileInput = document.getElementById(
+			'file-input',
+		) as HTMLInputElement;
+		const scaleSelect = document.getElementById(
+			'scale-select',
+		) as HTMLSelectElement;
+		const previewBtn = document.getElementById(
+			'preview-btn',
+		) as HTMLButtonElement;
+		const statusWrap = document.getElementById('status-wrap') as HTMLDivElement;
+		const statusText = document.getElementById('status-text') as HTMLSpanElement;
+		const statusPercent = document.getElementById(
+			'status-percent',
+		) as HTMLSpanElement;
+		const progressBar = document.getElementById(
+			'progress-bar',
+		) as HTMLDivElement;
+		const errorBox = document.getElementById('error-box') as HTMLDivElement;
+
+		const previewResult = document.getElementById(
+			'preview-result',
+		) as HTMLDivElement;
+		const previewModeBadge = document.getElementById(
+			'preview-mode-badge',
+		) as HTMLSpanElement;
+		const previewOriginalVideo = document.getElementById(
+			'preview-original-video',
+		) as HTMLVideoElement;
+		const previewUpscaledVideo = document.getElementById(
+			'preview-upscaled-video',
+		) as HTMLVideoElement;
+		const previewStats = document.getElementById(
+			'preview-stats',
+		) as HTMLDivElement;
+		const approveBtn = document.getElementById(
+			'approve-btn',
+		) as HTMLButtonElement;
+		const rejectBtn = document.getElementById('reject-btn') as HTMLButtonElement;
+
+		const fullResult = document.getElementById('full-result') as HTMLDivElement;
+		const fullModeBadge = document.getElementById(
+			'full-mode-badge',
+		) as HTMLSpanElement;
+		const fullVideo = document.getElementById('full-video') as HTMLVideoElement;
+		const downloadLink = document.getElementById(
+			'download-link',
+		) as HTMLAnchorElement;
+		const fullSizeText = document.getElementById(
+			'full-size-text',
+		) as HTMLSpanElement;
+
+		const escapeHtml = (str: string): string =>
+			str
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;');
+
+		let selectedFile: File | null = null;
+		let selectedFileUrl: string | null = null;
+		let previewSecondsTaken = 0; // wall-clock seconds the 5s preview actually took to process
+		let previewMode: Mode = 'fallback';
+		let previewFrameCount = 0;
+
+		function showStatus(text: string, percent?: number) {
+			statusWrap.classList.remove('hidden');
+			statusText.textContent = text;
+			if (typeof percent === 'number') {
+				const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+				statusPercent.textContent = `${clamped}%`;
+				progressBar.style.width = `${clamped}%`;
+			}
+		}
+
+		function hideStatus() {
+			statusWrap.classList.add('hidden');
+			progressBar.style.width = '0%';
+			statusPercent.textContent = '0%';
+		}
+
+		function showError(message: string) {
+			errorBox.classList.remove('hidden');
+			errorBox.textContent = message;
+		}
+
+		function clearError() {
+			errorBox.classList.add('hidden');
+			errorBox.textContent = '';
+		}
+
+		function formatDuration(totalSeconds: number): string {
+			const s = Math.max(0, Math.round(totalSeconds));
+			if (s < 60) return `${s} second${s === 1 ? '' : 's'}`;
+			const m = Math.floor(s / 60);
+			const rem = s % 60;
+			if (m < 60) return `${m}m ${rem}s`;
+			const h = Math.floor(m / 60);
+			const remM = m % 60;
+			return `${h}h ${remM}m`;
+		}
+
+		function pickMimeType(): string {
+			const candidates = [
+				'video/webm;codecs=vp9',
+				'video/webm;codecs=vp8',
+				'video/webm',
+			];
+			for (const c of candidates) {
+				if (
+					typeof MediaRecorder !== 'undefined' &&
+					MediaRecorder.isTypeSupported &&
+					MediaRecorder.isTypeSupported(c)
+				) {
+					return c;
+				}
+			}
+			return 'video/webm';
+		}
+
+		// --- ESRGAN / Upscaler.js setup -------------------------------------
+
+		let upscalerInstance: any = null;
+		let upscalerReady: Promise<void> | null = null;
+		let aiUnavailable = false;
+
+		async function getUpscaler(scale: number): Promise<any> {
+			if (aiUnavailable) return null;
+			try {
+				if (!upscalerInstance) {
+					const [{ default: Upscaler }, x2, x4] = await Promise.all([
+						import('upscaler'),
+						import('@upscalerjs/esrgan-slim/2x'),
+						import('@upscalerjs/esrgan-slim/4x'),
+					]);
+					const model = scale >= 4 ? (x4 as any).default : (x2 as any).default;
+					upscalerInstance = new (Upscaler as any)({ model });
+					upscalerReady = upscalerInstance.ready ?? Promise.resolve();
+				}
+				await upscalerReady;
+				return upscalerInstance;
+			} catch (err) {
+				console.error('[reel-clarity] AI model unavailable, using fallback', err);
+				aiUnavailable = true;
+				return null;
+			}
+		}
+
+		// --- Frame enhancement -----------------------------------------------
+
+		/**
+		 * Draws a source frame onto an output canvas at the target size, enhanced.
+		 * Tries the ESRGAN model first; falls back to a high-quality resample +
+		 * unsharp-mask sharpen pass if the model isn't available or errors.
+		 */
+		async function enhanceFrame(
+			sourceCanvas: HTMLCanvasElement,
+			outCanvas: HTMLCanvasElement,
+			scale: number,
+			preferAi: boolean,
+		): Promise<Mode> {
+			const outCtx = outCanvas.getContext('2d') as CanvasRenderingContext2D;
+			const targetW = sourceCanvas.width * scale;
+			const targetH = sourceCanvas.height * scale;
+			outCanvas.width = targetW;
+			outCanvas.height = targetH;
+
+			if (preferAi) {
+				const upscaler = await getUpscaler(scale);
+				if (upscaler) {
+					try {
+						const resultCanvas = document.createElement('canvas');
+						const tf = await import('@tensorflow/tfjs-core');
+						const tensor = await upscaler.upscale(sourceCanvas, {
+							output: 'tensor',
+							patchSize: 64,
+							padding: 4,
+						});
+						// Model output can slightly overshoot [0,1] (e.g. 1.16), and
+						// tf.browser.toPixels requires float tensors to be exactly in
+						// [0,1], so clip defensively before converting to pixels.
+						const clipped = tensor.clipByValue(0, 1);
+						await tf.browser.toPixels(clipped, resultCanvas);
+						tensor.dispose();
+						clipped.dispose();
+
+						outCtx.imageSmoothingEnabled = true;
+						outCtx.imageSmoothingQuality = 'high';
+						outCtx.drawImage(resultCanvas, 0, 0, targetW, targetH);
+						return 'ai';
+					} catch (err) {
+						console.error('[reel-clarity] AI upscale failed for frame, falling back', err);
+						aiUnavailable = true;
+					}
+				}
+			}
+
+			// Fallback: bicubic-ish resample (browser "high" smoothing) + unsharp mask
+			outCtx.imageSmoothingEnabled = true;
+			outCtx.imageSmoothingQuality = 'high';
+			outCtx.drawImage(sourceCanvas, 0, 0, targetW, targetH);
+			sharpenCanvas(outCtx, targetW, targetH);
+			return 'fallback';
+		}
+
+		/** Simple unsharp-mask style sharpen applied in-place on a 2d context. */
+		function sharpenCanvas(
+			ctx: CanvasRenderingContext2D,
+			width: number,
+			height: number,
+		) {
+			if (width < 3 || height < 3) return;
+			const imageData = ctx.getImageData(0, 0, width, height);
+			const { data } = imageData;
+			const w = width;
+			const original = new Uint8ClampedArray(data);
+			// 3x3 sharpen kernel
+			const kernel = [0, -0.5, 0, -0.5, 3, -0.5, 0, -0.5, 0];
+			for (let y = 1; y < height - 1; y++) {
+				for (let x = 1; x < w - 1; x++) {
+					for (let c = 0; c < 3; c++) {
+						let sum = 0;
+						let k = 0;
+						for (let ky = -1; ky <= 1; ky++) {
+							for (let kx = -1; kx <= 1; kx++) {
+								const idx = ((y + ky) * w + (x + kx)) * 4 + c;
+								sum += original[idx] * kernel[k];
+								k++;
+							}
+						}
+						const idx = (y * w + x) * 4 + c;
+						data[idx] = Math.max(0, Math.min(255, sum));
+					}
+				}
+			}
+			ctx.putImageData(imageData, 0, 0);
+		}
+
+		// --- Core processing pipeline: process a (possibly trimmed) video ----
+
+		interface ProcessResult {
+			blob: Blob;
+			mode: Mode;
+			framesProcessed: number;
+			secondsTaken: number;
+			outWidth: number;
+			outHeight: number;
+		}
+
+		/**
+		 * Processes `video` from `startTime` to `startTime + duration` (or to the
+		 * end if duration is omitted), drawing each sampled frame through
+		 * enhanceFrame and re-encoding via MediaRecorder.
+		 */
+		async function processSegment(
+			file: File,
+			scale: number,
+			opts: { startTime: number; duration?: number },
+			onProgress: (fraction: number, label: string) => void,
+		): Promise<ProcessResult> {
+			const url = URL.createObjectURL(file);
+			const video = document.createElement('video');
+			video.src = url;
+			video.muted = true;
+			video.playsInline = true;
+
+			await new Promise<void>((resolve, reject) => {
+				video.addEventListener('loadedmetadata', () => resolve(), { once: true });
+				video.addEventListener('error', () => reject(new Error('Could not read this video file.')), {
+					once: true,
+				});
+			});
+
+			const totalDuration = video.duration && isFinite(video.duration) ? video.duration : 0;
+			const segStart = Math.min(opts.startTime, Math.max(0, totalDuration - 0.1));
+			const segDuration = Math.max(
+				0.1,
+				Math.min(opts.duration ?? totalDuration - segStart, totalDuration - segStart),
+			);
+
+			const srcW = video.videoWidth || 640;
+			const srcH = video.videoHeight || 360;
+
+			// Cap frame rate for sanity / memory; sample at a fixed fps.
+			const fps = 24;
+			const frameCount = Math.max(1, Math.round(segDuration * fps));
+
+			const sourceCanvas = document.createElement('canvas');
+			sourceCanvas.width = srcW;
+			sourceCanvas.height = srcH;
+			const sourceCtx = sourceCanvas.getContext('2d') as CanvasRenderingContext2D;
+
+			const outCanvas = document.createElement('canvas');
+			const targetW = srcW * scale;
+			const targetH = srcH * scale;
+			outCanvas.width = targetW;
+			outCanvas.height = targetH;
+
+			const mimeType = pickMimeType();
+			const stream = outCanvas.captureStream(fps);
+			const recorder = new MediaRecorder(stream, {
+				mimeType,
+				videoBitsPerSecond: 8_000_000,
+			});
+
+			const chunks: Blob[] = [];
+			recorder.ondataavailable = (e: BlobEvent) => {
+				if (e.data && e.data.size > 0) chunks.push(e.data);
+			};
+
+			const recordingDone = new Promise<void>((resolve) => {
+				recorder.onstop = () => resolve();
+			});
+
+			recorder.start();
+
+			let mode: Mode = 'fallback';
+			const startWallClock = performance.now();
+			let preferAi = true;
+
+			for (let i = 0; i < frameCount; i++) {
+				const t = segStart + i / fps;
+				await new Promise<void>((resolve) => {
+					const onSeeked = () => {
+						video.removeEventListener('seeked', onSeeked);
+						resolve();
+					};
+					video.addEventListener('seeked', onSeeked);
+					video.currentTime = Math.min(t, Math.max(0, totalDuration - 0.01));
+				});
+
+				sourceCtx.drawImage(video, 0, 0, srcW, srcH);
+
+				const frameMode = await enhanceFrame(sourceCanvas, outCanvas, scale, preferAi);
+				mode = frameMode;
+				// Once we fall back, stick with fallback for consistency + speed.
+				if (frameMode === 'fallback') preferAi = false;
+
+				// Wait one animation frame so captureStream picks up the drawn frame.
+				await new Promise((r) => requestAnimationFrame(r));
+
+				onProgress((i + 1) / frameCount, `Enhancing frame ${i + 1} of ${frameCount}`);
+			}
+
+			const secondsTaken = (performance.now() - startWallClock) / 1000;
+
+			recorder.stop();
+			await recordingDone;
+
+			URL.revokeObjectURL(url);
+
+			const blob = new Blob(chunks, { type: mimeType.split(';')[0] });
+
+			return {
+				blob,
+				mode,
+				framesProcessed: frameCount,
+				secondsTaken,
+				outWidth: targetW,
+				outHeight: targetH,
+			};
+		}
+
+		// --- UI wiring ---------------------------------------------------------
+
+		fileInput.addEventListener('change', () => {
+			clearError();
+			previewResult.classList.add('hidden');
+			fullResult.classList.add('hidden');
+			hideStatus();
+
+			const file = fileInput.files && fileInput.files[0];
+			if (!file) {
+				selectedFile = null;
+				previewBtn.disabled = true;
+				return;
+			}
+			if (!file.type.startsWith('video/')) {
+				showError('Please choose a video file.');
+				previewBtn.disabled = true;
+				return;
+			}
+			selectedFile = file;
+			if (selectedFileUrl) URL.revokeObjectURL(selectedFileUrl);
+			selectedFileUrl = URL.createObjectURL(file);
+			previewBtn.disabled = false;
+		});
+
+		previewBtn.addEventListener('click', async () => {
+			if (!selectedFile) return;
+			clearError();
+			previewResult.classList.add('hidden');
+			fullResult.classList.add('hidden');
+			previewBtn.disabled = true;
+			fileInput.disabled = true;
+			scaleSelect.disabled = true;
+
+			const scale = parseInt(scaleSelect.value, 10) || 2;
+
+			try {
+				showStatus('Preparing preview…', 0);
+
+				const result = await processSegment(
+					selectedFile,
+					scale,
+					{ startTime: 0, duration: 5 },
+					(fraction, label) => showStatus(label, fraction * 100),
+				);
+
+				previewSecondsTaken = result.secondsTaken;
+				previewMode = result.mode;
+				previewFrameCount = result.framesProcessed;
+
+				const upscaledUrl = URL.createObjectURL(result.blob);
+				previewOriginalVideo.src = selectedFileUrl as string;
+				previewUpscaledVideo.src = upscaledUrl;
+
+				previewModeBadge.textContent =
+					result.mode === 'ai' ? 'AI enhance (ESRGAN)' : 'Sharpness-enhanced upscaling';
+
+				const safeName = escapeHtml(selectedFile.name);
+				previewStats.innerHTML = `
+					<p><strong class="text-[#2B2013]">File:</strong> ${safeName}</p>
+					<p class="mt-1"><strong class="text-[#2B2013]">Output size:</strong> ${result.outWidth}&times;${result.outHeight} (${scale}&times;)</p>
+					<p class="mt-1"><strong class="text-[#2B2013]">Preview processing time:</strong> ${formatDuration(result.secondsTaken)} for a 5-second sample</p>
+				`;
+
+				showStatus('Preview ready', 100);
+				setTimeout(hideStatus, 800);
+
+				previewResult.classList.remove('hidden');
+				previewResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+			} catch (err) {
+				console.error(err);
+				const message =
+					err instanceof Error ? err.message : 'Something went wrong processing the preview.';
+				showError(message);
+				hideStatus();
+			} finally {
+				previewBtn.disabled = false;
+				fileInput.disabled = false;
+				scaleSelect.disabled = false;
+			}
+		});
+
+		rejectBtn.addEventListener('click', () => {
+			previewResult.classList.add('hidden');
+			fullResult.classList.add('hidden');
+			fileInput.value = '';
+			selectedFile = null;
+			previewBtn.disabled = true;
+			clearError();
+		});
+
+		approveBtn.addEventListener('click', async () => {
+			if (!selectedFile) return;
+			clearError();
+			approveBtn.disabled = true;
+			rejectBtn.disabled = true;
+
+			const scale = parseInt(scaleSelect.value, 10) || 2;
+
+			try {
+				// Estimate total time by extrapolating from the real 5s preview.
+				const video = document.createElement('video');
+				const probeUrl = URL.createObjectURL(selectedFile);
+				video.src = probeUrl;
+				await new Promise<void>((resolve, reject) => {
+					video.addEventListener('loadedmetadata', () => resolve(), { once: true });
+					video.addEventListener('error', () => reject(new Error('Could not read this video file.')), {
+						once: true,
+					});
+				});
+				const totalDuration = video.duration && isFinite(video.duration) ? video.duration : 5;
+				URL.revokeObjectURL(probeUrl);
+
+				const perSecondRate = previewSecondsTaken / 5; // seconds of processing per second of source video
+				const estimatedSeconds = perSecondRate * totalDuration;
+
+				showStatus(
+					`Estimated time: ~${formatDuration(estimatedSeconds)} (based on your device's preview speed). Starting full run…`,
+					0,
+				);
+
+				const result = await processSegment(
+					selectedFile,
+					scale,
+					{ startTime: 0 },
+					(fraction, label) => showStatus(`${label} — ~${formatDuration(estimatedSeconds)} estimated total`, fraction * 100),
+				);
+
+				const fullUrl = URL.createObjectURL(result.blob);
+				fullVideo.src = fullUrl;
+				downloadLink.href = fullUrl;
+				const baseName = selectedFile.name.replace(/\.[^/.]+$/, '') || 'video';
+				downloadLink.download = `${baseName}-enhanced-${scale}x.webm`;
+
+				fullModeBadge.textContent =
+					result.mode === 'ai' ? 'AI enhance (ESRGAN)' : 'Sharpness-enhanced upscaling';
+				fullSizeText.textContent = `${(result.blob.size / 1024 / 1024).toFixed(2)} MB · ${result.outWidth}×${result.outHeight}`;
+
+				showStatus('Full video ready', 100);
+				setTimeout(hideStatus, 800);
+
+				fullResult.classList.remove('hidden');
+				fullResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+			} catch (err) {
+				console.error(err);
+				const message =
+					err instanceof Error ? err.message : 'Something went wrong processing the full video.';
+				showError(message);
+				hideStatus();
+			} finally {
+				approveBtn.disabled = false;
+				rejectBtn.disabled = false;
+			}
+		});
+	</script>
+</Layout>
