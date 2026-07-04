@@ -9,7 +9,10 @@ interface Props {
 
 const { title, description, canonicalPath = '/' } = Astro.props;
 const siteUrl = 'https://toprmrproducer.github.io';
-const base = import.meta.env.BASE_URL;
+// Astro's BASE_URL does not guarantee a trailing slash (e.g. "/reel-clarity"),
+// so normalize it to always end in "/" before concatenating path segments.
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 // canonicalPath is passed as a site-root-relative path like "/" or "/about";
 // prepend the base path so canonical/OG URLs resolve to the deployed subpath.
 const fullPath = `${base}${canonicalPath.replace(/^\//, '')}`;
