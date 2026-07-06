@@ -7,38 +7,39 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
 <Layout
 	title="ReelClarity — Enhance Video Resolution &amp; Sharpness, On-Device"
-	description="ReelClarity enhances video resolution and sharpness entirely on your device. No uploads, no signup, no waiting on a server. Preview a 5-second sample before committing to the full video."
+	description="ReelClarity enhances video resolution and sharpness entirely on your device. No uploads, no signup, no waiting on a server. Preview a 5-second sample side by side before committing to the full video."
 	canonicalPath="/"
 >
-	<section id="tool" class="mx-auto max-w-3xl">
-		<p class="text-xs font-semibold uppercase tracking-widest text-[#C9982E]">
+	<section id="tool" class="mx-auto max-w-[820px]">
+		<p class="text-xs font-bold uppercase tracking-[0.2em] text-[#c9982e]">
 			On-device video enhancement
 		</p>
-		<h1 class="mt-3 text-4xl font-semibold tracking-tight text-[#2B2013] sm:text-5xl">
-			Reel<span class="text-[#C9982E]">Clarity</span>
+		<h1 class="mt-4 text-5xl font-extrabold tracking-tight text-[#221b10] sm:text-[3.5rem]">
+			Reel<span class="text-[#c9982e]">Clarity</span>
 		</h1>
 
-		<p class="mt-5 text-lg leading-relaxed text-[#5C4F3D]">
+		<p class="mt-6 text-lg leading-relaxed text-[#4a4234]">
 			Sharpen and upscale your video's resolution right in your browser
 			&mdash; nothing is ever uploaded anywhere. Choose a file below and
 			ReelClarity will first process a
-			<strong class="text-[#2B2013]">5-second preview</strong> so you can
-			judge the quality and see how long a full run would take on your
-			device, before committing to the whole video.
+			<strong class="font-semibold text-[#221b10]">5-second preview</strong> and
+			show it <strong class="font-semibold text-[#221b10]">side by side</strong>
+			against the original, so you can judge the quality and see how long a
+			full run would take on your device before committing to the whole video.
 		</p>
 
-		<div class="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-[#8A7D67]">
+		<div class="mt-6 max-w-2xl text-[15px] leading-relaxed text-[#8a7e68]">
 			<p>
 				This tool tries to run a real on-device AI super-resolution model
-				(<strong class="text-[#5C4F3D]">ESRGAN</strong>) frame-by-frame: each
+				(<strong class="text-[#4a4234]">ESRGAN</strong>) frame-by-frame: each
 				video frame is drawn to a hidden canvas, passed through the model to
 				sharpen detail and enhance resolution, then re-encoded into a new
 				video using your browser's built-in
-				<code class="rounded bg-[#F3ECD9] px-1 py-0.5 text-xs">MediaRecorder</code>.
+				<code class="rounded bg-[#faf8f3] px-1.5 py-0.5 text-[13px] text-[#4a4234]">MediaRecorder</code>.
 				Per-frame ML upscaling is heavy, so if your device is too slow to
 				process frames faster than the video plays back, ReelClarity
 				automatically falls back to a
-				<strong class="text-[#5C4F3D]">fast sharpness-enhanced upscale</strong>
+				<strong class="text-[#4a4234]">fast sharpness-enhanced upscale</strong>
 				(high-quality canvas resampling plus an unsharp-mask sharpening pass)
 				so you still get a real, usable result instead of waiting forever.
 				Whichever mode ran is labeled clearly on the result so you always
@@ -46,12 +47,12 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 			</p>
 		</div>
 
-		<div class="mt-10 rounded-xl border border-[#E8DFC8] bg-white p-6 shadow-sm shadow-[#e8dfc8]/40 sm:p-8">
+		<div class="mt-10 rounded-2xl border border-[#eae4d6] bg-[#faf8f3] p-6 shadow-sm sm:p-8">
 			<div class="grid gap-6 sm:grid-cols-2">
 				<div>
 					<label
 						for="file-input"
-						class="mb-2 block text-sm font-medium text-[#5C4F3D]"
+						class="mb-2 block text-[15px] font-semibold text-[#221b10]"
 					>
 						Choose a video file
 					</label>
@@ -59,9 +60,9 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 						id="file-input"
 						type="file"
 						accept="video/*"
-						class="block w-full cursor-pointer rounded-xl border border-[#E8DFC8] bg-white text-sm text-[#5C4F3D] file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-[#C9982E] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-[#B8860B]"
+						class="block w-full cursor-pointer rounded-xl border border-[#eae4d6] bg-white text-[15px] text-[#4a4234] file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-[#c9982e] file:px-4 file:py-2.5 file:text-[15px] file:font-semibold file:text-white hover:file:bg-[#b8860b]"
 					/>
-					<p class="mt-1.5 text-xs text-[#8A7D67]">
+					<p class="mt-2 text-[13px] text-[#8a7e68]">
 						One file at a time &mdash; the preview needs to inspect it first.
 					</p>
 				</div>
@@ -69,18 +70,18 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 				<div>
 					<label
 						for="scale-select"
-						class="mb-2 block text-sm font-medium text-[#5C4F3D]"
+						class="mb-2 block text-[15px] font-semibold text-[#221b10]"
 					>
 						Upscale factor
 					</label>
 					<select
 						id="scale-select"
-						class="block w-full rounded-xl border border-[#E8DFC8] bg-white px-4 py-2.5 text-sm text-[#2B2013] focus:border-[#C9982E] focus:outline-none"
+						class="block w-full rounded-xl border border-[#eae4d6] bg-white px-4 py-3 text-[15px] text-[#221b10] focus:border-[#c9982e] focus:outline-none"
 					>
 						<option value="2">2&times; resolution</option>
 						<option value="4">4&times; resolution</option>
 					</select>
-					<p class="mt-1.5 text-xs text-[#8A7D67]">
+					<p class="mt-2 text-[13px] text-[#8a7e68]">
 						Higher factors take longer, especially in AI mode.
 					</p>
 				</div>
@@ -90,69 +91,94 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 				id="preview-btn"
 				type="button"
 				disabled
-				class="mt-6 w-full rounded-xl bg-[#C9982E] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#B8860B] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+				class="mt-6 w-full rounded-xl bg-[#c9982e] px-6 py-3.5 text-[15px] font-semibold text-white shadow-sm transition hover:bg-[#b8860b] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
 			>
 				Process 5-second preview
 			</button>
 
 			<!-- Status / progress -->
 			<div id="status-wrap" class="mt-6 hidden">
-				<div class="flex items-center justify-between text-sm">
-					<span id="status-text" class="text-[#5C4F3D]">Idle</span>
-					<span id="status-percent" class="text-[#8A7D67]">0%</span>
+				<div class="flex items-center justify-between text-[15px]">
+					<span id="status-text" class="text-[#4a4234]">Idle</span>
+					<span id="status-percent" class="text-[#8a7e68]">0%</span>
 				</div>
-				<div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-[#F3ECD9]">
+				<div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-[#eae4d6]">
 					<div
 						id="progress-bar"
-						class="h-full w-0 rounded-full bg-[#C9982E] transition-all duration-150"
+						class="h-full w-0 rounded-full bg-[#c9982e] transition-all duration-150"
 					></div>
 				</div>
+				<p class="mt-3 text-[13px] text-[#8a7e68]">
+					Enhancing on your device can take a moment &mdash; scroll down and
+					<a href="#snake-section" class="font-semibold text-[#c9982e] underline-offset-2 hover:underline">play a round of Snake</a>
+					while you wait.
+				</p>
 			</div>
 
 			<div
 				id="error-box"
-				class="mt-6 hidden rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+				class="mt-6 hidden rounded-xl border border-red-200 bg-red-50 p-4 text-[15px] text-red-700"
 			>
 			</div>
 
-			<!-- Preview result -->
+			<!-- Preview result: SIDE-BY-SIDE original vs enhanced -->
 			<div id="preview-result" class="mt-8 hidden">
 				<div class="flex items-center justify-between gap-3">
-					<h2 class="text-sm font-semibold text-[#2B2013]">
-						5-second preview
+					<h2 class="font-[Sora] text-base font-bold text-[#221b10]">
+						5-second preview &mdash; original vs enhanced
 					</h2>
 					<span
 						id="preview-mode-badge"
-						class="rounded-full border border-[#E8DFC8] bg-[#FAF6EC] px-3 py-1 text-xs font-medium text-[#B8860B]"
+						class="rounded-full border border-[#eae4d6] bg-white px-3 py-1 text-[13px] font-semibold text-[#b8860b]"
 					></span>
 				</div>
+				<p class="mt-1.5 text-[13px] text-[#8a7e68]">
+					Play both clips below to compare quality frame for frame before you commit to the full render.
+				</p>
 
 				<div class="mt-4 grid gap-4 sm:grid-cols-2">
 					<div>
-						<p class="mb-1.5 text-xs font-medium text-[#8A7D67]">Original</p>
+						<p class="mb-1.5 flex items-center gap-2 text-[13px] font-semibold text-[#8a7e68]">
+							<span class="inline-block h-2 w-2 rounded-full bg-[#8a7e68]"></span>
+							Original
+						</p>
 						<video
 							id="preview-original-video"
 							controls
 							muted
 							playsinline
-							class="w-full rounded-xl border border-[#E8DFC8] bg-black"
+							class="w-full rounded-xl border border-[#eae4d6] bg-black"
 						></video>
 					</div>
 					<div>
-						<p class="mb-1.5 text-xs font-medium text-[#8A7D67]">Enhanced</p>
+						<p class="mb-1.5 flex items-center gap-2 text-[13px] font-semibold text-[#b8860b]">
+							<span class="inline-block h-2 w-2 rounded-full bg-[#c9982e]"></span>
+							Enhanced
+						</p>
 						<video
 							id="preview-upscaled-video"
 							controls
 							muted
 							playsinline
-							class="w-full rounded-xl border border-[#E8DFC8] bg-black"
+							class="w-full rounded-xl border border-[#c9982e]/40 bg-black"
 						></video>
 					</div>
 				</div>
 
+				<div class="mt-4 flex flex-wrap items-center gap-3">
+					<button
+						id="sync-play-btn"
+						type="button"
+						class="rounded-lg border border-[#eae4d6] bg-white px-4 py-2 text-[13px] font-semibold text-[#4a4234] transition hover:border-[#c9982e] hover:text-[#b8860b]"
+					>
+						&#9654; Play both in sync
+					</button>
+					<span class="text-[13px] text-[#8a7e68]">Compare the same moment on both clips.</span>
+				</div>
+
 				<div
 					id="preview-stats"
-					class="mt-4 rounded-xl border border-[#E8DFC8] bg-[#FAF6EC] p-4 text-sm text-[#5C4F3D]"
+					class="mt-4 rounded-xl border border-[#eae4d6] bg-white p-4 text-[15px] text-[#4a4234]"
 				>
 				</div>
 
@@ -160,14 +186,14 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 					<button
 						id="approve-btn"
 						type="button"
-						class="rounded-xl bg-[#C9982E] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#B8860B]"
+						class="rounded-xl bg-[#c9982e] px-6 py-3.5 text-[15px] font-semibold text-white shadow-sm transition hover:bg-[#b8860b]"
 					>
 						Looks good &mdash; enhance the full video
 					</button>
 					<button
 						id="reject-btn"
 						type="button"
-						class="rounded-xl border border-[#E8DFC8] bg-white px-6 py-3 text-sm font-semibold text-[#5C4F3D] transition hover:bg-[#FAF6EC]"
+						class="rounded-xl border border-[#eae4d6] bg-white px-6 py-3.5 text-[15px] font-semibold text-[#4a4234] transition hover:bg-[#faf8f3]"
 					>
 						Try a different file
 					</button>
@@ -177,59 +203,76 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 			<!-- Full run result -->
 			<div id="full-result" class="mt-8 hidden">
 				<div class="flex items-center justify-between gap-3">
-					<h2 class="text-sm font-semibold text-[#2B2013]">
+					<h2 class="font-[Sora] text-base font-bold text-[#221b10]">
 						Full enhanced video
 					</h2>
 					<span
 						id="full-mode-badge"
-						class="rounded-full border border-[#E8DFC8] bg-[#FAF6EC] px-3 py-1 text-xs font-medium text-[#B8860B]"
+						class="rounded-full border border-[#eae4d6] bg-white px-3 py-1 text-[13px] font-semibold text-[#b8860b]"
 					></span>
 				</div>
 				<video
 					id="full-video"
 					controls
 					playsinline
-					class="mt-4 w-full rounded-xl border border-[#E8DFC8] bg-black"
+					class="mt-4 w-full rounded-xl border border-[#eae4d6] bg-black"
 				></video>
 				<div class="mt-4 flex flex-wrap items-center gap-3">
 					<a
 						id="download-link"
 						download="enhanced-video.webm"
-						class="inline-flex items-center gap-2 rounded-xl bg-[#C9982E] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#B8860B]"
+						class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#c9982e] px-6 py-3.5 text-[15px] font-semibold text-white shadow-sm transition hover:bg-[#b8860b]"
 					>
 						Download enhanced video
 					</a>
-					<span id="full-size-text" class="text-xs text-[#8A7D67]"></span>
+					<span id="full-size-text" class="text-[13px] text-[#8a7e68]"></span>
 				</div>
 			</div>
 		</div>
 
 		<div
-			class="mt-8 rounded-xl border border-[#E8DFC8] bg-white/60 p-6 text-sm text-[#8A7D67]"
+			class="mt-8 rounded-2xl border border-[#eae4d6] bg-[#faf8f3] p-6 text-[15px] leading-relaxed text-[#8a7e68]"
 		>
 			<p>
-				<strong class="text-[#5C4F3D]">How it works:</strong> your browser
+				<strong class="text-[#4a4234]">How it works:</strong> your browser
 				decodes the video with a hidden
-				<code class="rounded bg-[#F3ECD9] px-1 py-0.5 text-xs">&lt;video&gt;</code>
+				<code class="rounded bg-white px-1.5 py-0.5 text-[13px] text-[#4a4234]">&lt;video&gt;</code>
 				element, seeks through it frame by frame, draws each frame to a canvas,
 				enhances that frame (either through the on-device ESRGAN model or a
 				high-quality resample + sharpen pass), and streams the enhanced
 				canvas into
-				<code class="rounded bg-[#F3ECD9] px-1 py-0.5 text-xs">MediaRecorder</code>
+				<code class="rounded bg-white px-1.5 py-0.5 text-[13px] text-[#4a4234]">MediaRecorder</code>
 				to produce a new WebM file. The 5-second preview always runs first so
-				you can judge quality and get a real time estimate &mdash; extrapolated
-				directly from how long your device took on the preview &mdash; before
-				running the full video. Audio is currently not carried over to the
-				enhanced output. Very long or very high-resolution videos may take a
-				while or use significant memory, since everything happens on your
-				device.
+				you can judge quality side by side and get a real time estimate &mdash;
+				extrapolated directly from how long your device took on the preview
+				&mdash; before running the full video. Audio is currently not carried
+				over to the enhanced output. Very long or very high-resolution videos
+				may take a while or use significant memory, since everything happens on
+				your device.
 			</p>
 		</div>
 
-		<div class="mt-6 flex flex-wrap gap-4 text-sm text-[#8A7D67]">
-			<a href={`${base}about`} class="hover:text-[#B8860B]">About ReelClarity</a>
-			<a href={`${base}faq`} class="hover:text-[#B8860B]">FAQ</a>
-			<a href={`${base}privacy`} class="hover:text-[#B8860B]">Privacy Policy</a>
+		<!-- Snake boredom-filler: this is a SLOW tool, so surface it prominently. -->
+		<section id="snake-section" class="mx-auto mt-14 max-w-[820px]">
+			<details id="snake-details" class="rounded-2xl border border-[#eae4d6] bg-[#faf8f3] p-5" open>
+				<summary class="cursor-pointer select-none font-[Sora] text-lg font-bold text-[#221b10]">
+					This can take a moment &mdash; play a round of Snake while you wait
+				</summary>
+				<div class="mt-4 flex flex-col items-center gap-3">
+					<canvas id="snake-canvas" width="320" height="320" class="rounded-lg border border-[#eae4d6] bg-white" style="touch-action:none"></canvas>
+					<div class="flex items-center gap-4 text-sm text-[#4a4234]">
+						<span>Score: <b id="snake-score">0</b></span>
+						<button id="snake-restart" class="rounded-lg bg-[#c9982e] px-4 py-2 font-semibold text-white transition hover:bg-[#b8860b]">Restart</button>
+					</div>
+					<p class="text-xs text-[#8a7e68]">Arrow keys / WASD, or swipe on mobile.</p>
+				</div>
+			</details>
+		</section>
+
+		<div class="mt-6 flex flex-wrap gap-4 text-[15px] text-[#8a7e68]">
+			<a href={`${base}about`} class="transition hover:text-[#b8860b]">About ReelClarity</a>
+			<a href={`${base}faq`} class="transition hover:text-[#b8860b]">FAQ</a>
+			<a href={`${base}privacy`} class="transition hover:text-[#b8860b]">Privacy Policy</a>
 		</div>
 	</section>
 
@@ -270,6 +313,9 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 		const previewStats = document.getElementById(
 			'preview-stats',
 		) as HTMLDivElement;
+		const syncPlayBtn = document.getElementById(
+			'sync-play-btn',
+		) as HTMLButtonElement | null;
 		const approveBtn = document.getElementById(
 			'approve-btn',
 		) as HTMLButtonElement;
@@ -291,10 +337,14 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 			str
 				.replace(/&/g, '&amp;')
 				.replace(/</g, '&lt;')
-				.replace(/>/g, '&gt;');
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&#39;');
 
 		let selectedFile: File | null = null;
 		let selectedFileUrl: string | null = null;
+		let upscaledPreviewUrl: string | null = null;
+		let fullResultUrl: string | null = null;
 		let previewSecondsTaken = 0; // wall-clock seconds the 5s preview actually took to process
 		let previewMode: Mode = 'fallback';
 		let previewFrameCount = 0;
@@ -323,6 +373,27 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 		function clearError() {
 			errorBox.classList.add('hidden');
 			errorBox.textContent = '';
+		}
+
+		/**
+		 * Revoke a blob object URL safely: first detach it from any <video>
+		 * element still pointing at it (and call load() to reset the media
+		 * element), so the browser never tries to re-read a revoked blob and
+		 * emit a "WebKitBlobResource error 1" style console error.
+		 */
+		function revokeBlobUrl(url: string | null, ...videos: HTMLVideoElement[]) {
+			if (!url) return;
+			for (const v of videos) {
+				if (v && v.src === url) {
+					v.removeAttribute('src');
+					try {
+						v.load();
+					} catch (_) {
+						/* no-op */
+					}
+				}
+			}
+			URL.revokeObjectURL(url);
 		}
 
 		function formatDuration(totalSeconds: number): string {
@@ -554,36 +625,56 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 			const startWallClock = performance.now();
 			let preferAi = true;
 
-			for (let i = 0; i < frameCount; i++) {
-				const t = segStart + i / fps;
-				await new Promise<void>((resolve) => {
-					const onSeeked = () => {
-						video.removeEventListener('seeked', onSeeked);
-						resolve();
-					};
-					video.addEventListener('seeked', onSeeked);
-					video.currentTime = Math.min(t, Math.max(0, totalDuration - 0.01));
-				});
+			try {
+				for (let i = 0; i < frameCount; i++) {
+					const t = segStart + i / fps;
+					await new Promise<void>((resolve) => {
+						const onSeeked = () => {
+							video.removeEventListener('seeked', onSeeked);
+							resolve();
+						};
+						video.addEventListener('seeked', onSeeked);
+						video.currentTime = Math.min(t, Math.max(0, totalDuration - 0.01));
+					});
 
-				sourceCtx.drawImage(video, 0, 0, srcW, srcH);
+					sourceCtx.drawImage(video, 0, 0, srcW, srcH);
 
-				const frameMode = await enhanceFrame(sourceCanvas, outCanvas, scale, preferAi);
-				mode = frameMode;
-				// Once we fall back, stick with fallback for consistency + speed.
-				if (frameMode === 'fallback') preferAi = false;
+					// enhanceFrame already catches per-frame AI errors and degrades to
+					// the fallback resample+sharpen path, so a model error on one frame
+					// never aborts the whole run.
+					const frameMode = await enhanceFrame(sourceCanvas, outCanvas, scale, preferAi);
+					mode = frameMode;
+					// Once we fall back, stick with fallback for consistency + speed.
+					if (frameMode === 'fallback') preferAi = false;
 
-				// Wait one animation frame so captureStream picks up the drawn frame.
-				await new Promise((r) => requestAnimationFrame(r));
+					// Wait one animation frame so captureStream picks up the drawn frame.
+					await new Promise((r) => requestAnimationFrame(r));
 
-				onProgress((i + 1) / frameCount, `Enhancing frame ${i + 1} of ${frameCount}`);
+					onProgress((i + 1) / frameCount, `Enhancing frame ${i + 1} of ${frameCount}`);
+				}
+			} finally {
+				// Always tear down the recorder + object URL even if a frame throws,
+				// so we don't leak the decoder or the blob URL.
+				try {
+					if (recorder.state !== 'inactive') recorder.stop();
+				} catch (_) {
+					/* recorder may already be stopped */
+				}
+				await recordingDone;
+				// Detach the offscreen processing video from the blob URL BEFORE
+				// revoking it, otherwise the media element may still attempt a
+				// pending seek against a revoked blob and log a resource error.
+				try {
+					video.pause();
+					video.removeAttribute('src');
+					video.load();
+				} catch (_) {
+					/* no-op */
+				}
+				URL.revokeObjectURL(url);
 			}
 
 			const secondsTaken = (performance.now() - startWallClock) / 1000;
-
-			recorder.stop();
-			await recordingDone;
-
-			URL.revokeObjectURL(url);
 
 			const blob = new Blob(chunks, { type: mimeType.split(';')[0] });
 
@@ -617,7 +708,9 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 				return;
 			}
 			selectedFile = file;
-			if (selectedFileUrl) URL.revokeObjectURL(selectedFileUrl);
+			// The old file URL may still be the src of the original preview video;
+			// detach it before revoking so no stale blob read is attempted.
+			revokeBlobUrl(selectedFileUrl, previewOriginalVideo);
 			selectedFileUrl = URL.createObjectURL(file);
 			previewBtn.disabled = false;
 		});
@@ -647,18 +740,19 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 				previewMode = result.mode;
 				previewFrameCount = result.framesProcessed;
 
-				const upscaledUrl = URL.createObjectURL(result.blob);
+				revokeBlobUrl(upscaledPreviewUrl, previewUpscaledVideo);
+				upscaledPreviewUrl = URL.createObjectURL(result.blob);
 				previewOriginalVideo.src = selectedFileUrl as string;
-				previewUpscaledVideo.src = upscaledUrl;
+				previewUpscaledVideo.src = upscaledPreviewUrl;
 
 				previewModeBadge.textContent =
 					result.mode === 'ai' ? 'AI enhance (ESRGAN)' : 'Sharpness-enhanced upscaling';
 
 				const safeName = escapeHtml(selectedFile.name);
 				previewStats.innerHTML = `
-					<p><strong class="text-[#2B2013]">File:</strong> ${safeName}</p>
-					<p class="mt-1"><strong class="text-[#2B2013]">Output size:</strong> ${result.outWidth}&times;${result.outHeight} (${scale}&times;)</p>
-					<p class="mt-1"><strong class="text-[#2B2013]">Preview processing time:</strong> ${formatDuration(result.secondsTaken)} for a 5-second sample</p>
+					<p><strong class="text-[#221b10]">File:</strong> ${safeName}</p>
+					<p class="mt-1"><strong class="text-[#221b10]">Output size:</strong> ${result.outWidth}&times;${result.outHeight} (${scale}&times;)</p>
+					<p class="mt-1"><strong class="text-[#221b10]">Preview processing time:</strong> ${escapeHtml(formatDuration(result.secondsTaken))} for a 5-second sample</p>
 				`;
 
 				showStatus('Preview ready', 100);
@@ -678,6 +772,20 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 				scaleSelect.disabled = false;
 			}
 		});
+
+		// Side-by-side "play both in sync": restart both preview clips from 0.
+		if (syncPlayBtn) {
+			syncPlayBtn.addEventListener('click', () => {
+				try {
+					previewOriginalVideo.currentTime = 0;
+					previewUpscaledVideo.currentTime = 0;
+					void previewOriginalVideo.play();
+					void previewUpscaledVideo.play();
+				} catch (_) {
+					/* autoplay may be blocked; controls remain available */
+				}
+			});
+		}
 
 		rejectBtn.addEventListener('click', () => {
 			previewResult.classList.add('hidden');
@@ -708,6 +816,13 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 					});
 				});
 				const totalDuration = video.duration && isFinite(video.duration) ? video.duration : 5;
+				// Detach before revoking so the probe element never reads a dead blob.
+				try {
+					video.removeAttribute('src');
+					video.load();
+				} catch (_) {
+					/* no-op */
+				}
 				URL.revokeObjectURL(probeUrl);
 
 				const perSecondRate = previewSecondsTaken / 5; // seconds of processing per second of source video
@@ -725,9 +840,10 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 					(fraction, label) => showStatus(`${label} — ~${formatDuration(estimatedSeconds)} estimated total`, fraction * 100),
 				);
 
-				const fullUrl = URL.createObjectURL(result.blob);
-				fullVideo.src = fullUrl;
-				downloadLink.href = fullUrl;
+				revokeBlobUrl(fullResultUrl, fullVideo);
+				fullResultUrl = URL.createObjectURL(result.blob);
+				fullVideo.src = fullResultUrl;
+				downloadLink.href = fullResultUrl;
 				const baseName = selectedFile.name.replace(/\.[^/.]+$/, '') || 'video';
 				downloadLink.download = `${baseName}-enhanced-${scale}x.webm`;
 
@@ -751,5 +867,38 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 				rejectBtn.disabled = false;
 			}
 		});
+	</script>
+
+	<!-- Snake boredom-filler game logic -->
+	<script>
+		(() => {
+			const cv = document.getElementById('snake-canvas') as HTMLCanvasElement | null; if (!cv) return;
+			const ctx = cv.getContext('2d') as CanvasRenderingContext2D; const G = 16, N = 20;
+			let snake: {x:number;y:number}[], dir: {x:number;y:number}, food: {x:number;y:number}, score: number, alive: boolean;
+			const scoreEl = document.getElementById('snake-score');
+			function reset(){ snake=[{x:10,y:10}]; dir={x:0,y:0}; food=rndFood(); score=0; alive=true; if(scoreEl)scoreEl.textContent='0'; }
+			function rndFood(){ return {x:Math.floor(Math.random()*N), y:Math.floor(Math.random()*N)}; }
+			function step(){
+				if(!alive) return;
+				if(dir.x===0&&dir.y===0){ draw(); return; }
+				const h={x:snake[0].x+dir.x, y:snake[0].y+dir.y};
+				if(h.x<0||h.y<0||h.x>=N||h.y>=N||snake.some(s=>s.x===h.x&&s.y===h.y)){ alive=false; draw(); return; }
+				snake.unshift(h);
+				if(h.x===food.x&&h.y===food.y){ score++; if(scoreEl)scoreEl.textContent=String(score); food=rndFood(); } else snake.pop();
+				draw();
+			}
+			function draw(){
+				ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,cv.width,cv.height);
+				ctx.fillStyle='#c9982e'; snake.forEach(s=>ctx.fillRect(s.x*G+1,s.y*G+1,G-2,G-2));
+				ctx.fillStyle='#221b10'; ctx.fillRect(food.x*G+3,food.y*G+3,G-6,G-6);
+				if(!alive){ ctx.fillStyle='rgba(34,27,16,0.72)'; ctx.fillRect(0,0,cv.width,cv.height); ctx.fillStyle='#fff'; ctx.font='bold 20px Sora, sans-serif'; ctx.textAlign='center'; ctx.fillText('Game Over — Restart', cv.width/2, cv.height/2); }
+			}
+			function turn(x: number, y: number){ if((x!==0&&dir.x===0)||(y!==0&&dir.y===0)) dir={x,y}; }
+			window.addEventListener('keydown', e=>{ const k=e.key.toLowerCase(); if(['arrowup','w'].includes(k))turn(0,-1); else if(['arrowdown','s'].includes(k))turn(0,1); else if(['arrowleft','a'].includes(k))turn(-1,0); else if(['arrowright','d'].includes(k))turn(1,0); else return; e.preventDefault(); }, {passive:false});
+			let tx: number, ty: number; cv.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+			cv.addEventListener('touchend',e=>{ const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty; if(Math.abs(dx)>Math.abs(dy)) turn(dx>0?1:-1,0); else turn(0,dy>0?1:-1); },{passive:true});
+			document.getElementById('snake-restart')?.addEventListener('click', reset);
+			reset(); setInterval(step, 110);
+		})();
 	</script>
 </Layout>

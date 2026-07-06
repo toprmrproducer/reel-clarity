@@ -1,5 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 ---
 
 <Layout
@@ -7,17 +10,17 @@ import Layout from '../layouts/Layout.astro';
 	description="This page doesn't exist. Return to ReelClarity to enhance your video's resolution and sharpness on-device."
 	canonicalPath="/404"
 >
-	<section class="mx-auto max-w-xl text-center">
-		<p class="text-sm font-semibold uppercase tracking-widest text-[#C9982E]">404</p>
-		<h1 class="mt-3 text-3xl font-semibold tracking-tight text-[#2B2013] sm:text-4xl">
+	<section class="mx-auto max-w-[560px] text-center">
+		<p class="text-sm font-bold uppercase tracking-[0.2em] text-[#c9982e]">404</p>
+		<h1 class="mt-4 text-4xl font-extrabold tracking-tight text-[#221b10] sm:text-[2.75rem]">
 			Page not found
 		</h1>
-		<p class="mt-4 text-[#5C4F3D]">
+		<p class="mt-4 text-lg text-[#4a4234]">
 			The page you're looking for doesn't exist or may have moved.
 		</p>
 		<a
-			href={import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`}
-			class="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#C9982E] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#B8860B]"
+			href={base}
+			class="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#c9982e] px-6 py-3.5 text-[15px] font-semibold text-white shadow-sm transition hover:bg-[#b8860b]"
 		>
 			Back to ReelClarity
 		</a>
